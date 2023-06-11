@@ -1,7 +1,12 @@
+import { headers } from 'next/headers';
 import Link from 'next/link';
 
 export default async function Blog() {
-    const posts = await fetch('http://localhost:3000/api/content').then((res) =>
+
+    const _headers = headers();
+    const origin = new URL(_headers.get('referer')!).origin;
+
+    const posts = await fetch(origin + '/api/content').then((res) =>
         res.json()
     );
     return (

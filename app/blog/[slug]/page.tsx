@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+
 export const revalidate = 1200; // not necessary, just for ISR demonstration
 
 interface Post {
@@ -7,7 +9,11 @@ interface Post {
 }
 
 export async function generateStaticParams() {
-    const posts: Post[] = await fetch('http://localhost:3000/api/content').then(
+
+    const _headers = headers();
+    const origin = new URL(_headers.get('referer')!).origin;
+
+    const posts: Post[] = await fetch(origin + '/api/content').then(
         (res) => res.json()
     );
 
@@ -21,8 +27,12 @@ interface Props {
 }
 
 export default async function BlogPostPage({ params }: Props) {
+
+    const _headers = headers();
+    const origin = new URL(_headers.get('referer')!).origin;
+
     // deduped
-    const posts: Post[] = await fetch('http://localhost:3000/api/content').then(
+    const posts: Post[] = await fetch(origin + '/api/content').then(
         (res) => res.json()
     );
     const post = posts.find((post) => post.slug === params.slug);
