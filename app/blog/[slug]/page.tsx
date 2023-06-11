@@ -10,8 +10,10 @@ interface Post {
 
 export async function generateStaticParams() {
 
-    const _headers = headers();
-    const origin = new URL(_headers.get('referer')!).origin;
+    // can't use headers since pre-compiled
+    const origin = process.env.NODE_ENV === 'production'
+        ? 'https://nextspace-nine.vercel.app'
+        : 'http://localhost:3000';
 
     const posts: Post[] = await fetch(origin + '/api/content').then(
         (res) => res.json()
