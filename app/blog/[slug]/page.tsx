@@ -30,8 +30,11 @@ interface Props {
 
 export default async function BlogPostPage({ params }: Props) {
 
-    const _headers = headers();
-    const origin = new URL(_headers.get('referer')!).origin;
+    //const _headers = headers();
+    //const origin = new URL(_headers.get('referer')!).origin;
+    const origin = process.env.NODE_ENV === 'production'
+        ? 'https://nextspace-nine.vercel.app'
+        : 'http://localhost:3000';
 
     // deduped
     const posts: Post[] = await fetch(origin + '/api/content').then(
